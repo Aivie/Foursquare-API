@@ -1,4 +1,3 @@
-
 var clientId = 'EQ124X2XB55O5STAT323FYVCLS3N1XOSGT50AWFSYLXHUZ4H';
 var clientSecret = 'MNA04GQN1IYIP3ZRKBPYHXQKA42UKXPENUJ1NYLIFNY3J04Z';
 // Backup Id and Secret: Only use these if indicated by teachers.
@@ -12,18 +11,22 @@ var detailsEndpoint = 'https://api.foursquare.com/v2/venues/';
 var googleLatLon = '40.74138576966485,-74.00251216940646';
 
 var authParams = {
-    'client_id' : clientId,
-    'client_secret' : clientSecret,
-    'v' : '20160126'
+    'client_id': clientId,
+    'client_secret': clientSecret,
+    'v': '20160126'
 };
 
 
-$(document).ready(function(){
-  $('#search-btn').click(function() {
+$(document).ready(function() {
+    $('#search-btn').click(function() {
         clearResults();
         addResultHeader();
         var query = $('#search-query').val();
         // TODO 1: Call searchFoursquare with the right parameters
+        searchFoursquare(query, googleLatLon, function(callback) {
+            console.log(callback);
+            //change to addresult later
+        });
     });
 });
 
@@ -33,8 +36,15 @@ $(document).ready(function(){
 //   query: String that represents the query.
 //   latLon: String that represents the location nearby which you want to search.
 //   callback: single-parameter function that processes the search results.
-function searchFoursquare(query, latLon, callback) {
+function searchFoursquare(query, googleLatLon, callback) {
     // TODO 2: query the fourquare server here, using jQuery's $.get() function.
+    var url = searchEndpoint + "?query=" + query + "&client_id=" + clientId + "&client_secret=" + clientSecret + "&v=20160126" + "&ll=" + googleLatLon;
+    $.get(url, function(data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#search-results").append(data.response.venues[i].name);
+            console.log(data.response.venues[i].name);
+        }
+    });
 }
 
 // Clears the html result elements, so you can then populate them with fresh results.
